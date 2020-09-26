@@ -6,6 +6,6 @@ int main(int argc, char const *argv[])
     /* code */
     printf("hello\n");
     int x=fork();
-    printf("wassup\n");
+    printf("waup\n");
     return 0;
 }
