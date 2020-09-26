@@ -1,0 +1,1 @@
+﻿If we use a register to access the parameters passed by the c program in assembly then the program can run on both 64 bit and 32 bit systems as registers are common in both the cases.

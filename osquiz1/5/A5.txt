@@ -1,0 +1,13 @@
+﻿Since we have less than 1 mb of memory the total memory available in both modes would be the same for both modes but incase of long mode there is a need for a descriptor table and paging to be implemented hence there is a space and time overhead. Hence for 320 kb we would use real mode (16 bit) .
+The following would be the benefits of real mode-
+1. Faster memory access since there are no descriptor tables to check smaller registers.
+2. Availability of Advance low level bios functions.
+3. Access to all 32bit registers.
+There are some downsides to using to real mode-:
+1. No hardware based protection or virtual memory.
+2. No security mechanisms against bugs or malicious programs.
+
+
+the following would be benefits of long mode:
+1. has security protocols
+2. has hardward based protection

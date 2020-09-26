@@ -1,0 +1,1 @@
+﻿If we use stack in assembly to access the parameters passed by the c program then there needs to be a different assembly program since there are different registers that store the stack and base pointers in assembly. For eg in 32 bit the base pointer is ebp and stack pointer is esp but in 64 bit the base pointer rbp and the stack pointer is rsp.
