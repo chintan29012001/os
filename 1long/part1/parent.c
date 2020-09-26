@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include<sys/wait.h> 
 #include <sys/types.h> 
+#include <fcntl.h> 
+#include<sys/stat.h>
 
 void slic(char ar[],char sec)
 {
@@ -53,27 +55,53 @@ void slic(char ar[],char sec)
     {
         avg+=details[i];
     }
-    printf("roll no: %d avg %.2f \n",details[0],avg/4);
+    printf("roll no:%d \t a1:%d \t a2:%d \t a3:%d \t a4:%d \t avg %.2f \n",details[0],details[1],details[2],details[3],details[4],avg/4);
     
 }
 
 void func(char x)
 {
-        FILE *fp=fopen("file.csv","r");
-        char buf[1024];
-        while(fgets(buf,1024,fp))
+        int fd=open("file.csv",O_RDONLY);
+        // FILE *fp=fopen("file.csv","r");
+        char* buf=(char*)malloc(512);
+        char t[]="itStudent,ID,Section-Number,Assignment-1,Assignment-2,Assignment-3,Assignment-4";
+        read(fd,buf,sizeof(t)+1);
+        for(int i=0;i<1024;i++)
+            buf[i]='\0';
+        int i=0; 
+        
+        while(read(fd,&buf[i],1))
         {
-                // printf("fo %s\n",buf);
-               
-            if(buf[0]>='0'&&buf[0]<='9')
+            // if(buf[0]<'0'&&buf[0]>'9')
+            // {
+            //     printf("%s",buf);
+            // }
+            if(buf[i]=='\n')
             {
-                slic(buf,x);
+                
+                // printf("%s",buf);
+                i=0;
+                if(buf[0]>='0'&&buf[0]<='9')
+                {
+                    slic(buf,x);
+                    for(int i=0;i<500;i++)
+                        buf[i]='\0';
 
+                }
             }
+            else
+                i++;
+            
                 
         }
+        // printf("abc %s",buf);
+        if(buf[0]>='0'&&buf[0]<='9')
+        {
+            slic(buf,x);
+
+        }
         
-        fclose(fp);
+        close(fd);
 
 }
 int main(int argc, char const *argv[])
