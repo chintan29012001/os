@@ -10,7 +10,7 @@ void cd()
     chdir(getenv("HOME"));
     // printf("%s",getenv("HOME"));
 }
-void cd(char path[])
+void cd1(char path[])
 {
     if(path==NULL)
         return;

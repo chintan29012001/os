@@ -63,7 +63,7 @@ void func(char x)
 {
         int fd=open("file.csv",O_RDONLY);
         // FILE *fp=fopen("file.csv","r");
-        char* buf=(char*)malloc(512);
+        char buf[1024];
         char t[]="itStudent,ID,Section-Number,Assignment-1,Assignment-2,Assignment-3,Assignment-4";
         read(fd,buf,sizeof(t)+1);
         for(int i=0;i<1024;i++)
