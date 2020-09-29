@@ -1,0 +1,8 @@
+NAME         mkdir
+       mkdir - make directories
+syntax
+       mkdir [OPTION]... DIRECTORY...
+DESCRIPTION         top
+       Create the DIRECTORY(ies), if they do not already exist.
+       -v     print a message for each created directory
+       --help display this help and exit
