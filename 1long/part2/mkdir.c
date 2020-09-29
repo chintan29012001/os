@@ -5,6 +5,8 @@
 int main(int argc, char const *argv[])
 {
     /* code */
-    mkdir("lef",700);
+    int x;
+    scanf("%d",&x);
+    mkdir("leh",x);
     return 0;
 }
