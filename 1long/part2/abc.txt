@@ -1,0 +1,3 @@
+//echo *(ls) -n()
+//history -d -c
+

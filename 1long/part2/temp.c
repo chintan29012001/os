@@ -5,14 +5,7 @@
 int main(int argc, char const *argv[])
 {
     /* code */
-    char string[100];
-    scanf("%s",string);
-   // Extract the first token
-   char * token = strtok(string, " ");
-   // loop through the string to extract all other tokens
-   while( token != NULL ) {
-      printf( " %s\n", token ); //printing each token
-      token = strtok(NULL, " ");
-   }
+    char string[]={"a.txt"};
+    remove(string);
     return 0;
 }
