@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
     int k=1;
     int* files=(int*)malloc((k)*sizeof(int));;
     for( i=0;i<3;i++)flg[i]=0;       
-    for(i=0;argv[i]!=NULL;i++)
+    for(i=1;argv[i]!=NULL;i++)
     {            
         if(strcmp(argv[i],"-f")==0)
         {
@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
         {
             flg[1]=1;                            
         }
-        else if(strcmp(argv[i],"./rm")!=0)
+        else
         {
             flg[2]=1;
             if(k>1)
