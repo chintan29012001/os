@@ -35,6 +35,14 @@ void _f(const char* argv[],int files[],int si,int f)
         {
             if(f==1)
                 remove(argv[files[i]]);
+            else if(f==2)
+            {
+                if(remove(argv[files[i]])!=0)
+                {
+                    printf("rm cannot delete %s \n",argv[files[i]]);
+                }
+
+            }
             else
             {
                 printf("Do you want to remove (y/n) %s\n",argv[files[i]]);
@@ -44,7 +52,7 @@ void _f(const char* argv[],int files[],int si,int f)
                 {
                     if(remove(argv[files[i]])!=0)
                     {
-                        printf("cannot delete\n");
+                        printf("rm cannot delete %s \n",argv[files[i]]);
                     }
                 }
 
@@ -111,7 +119,7 @@ int main(int argc, char const *argv[])
             }
             else
             {
-                _f(argv,files,k-1,1);
+                _f(argv,files,k-1,2);
             }
 
         }

@@ -29,19 +29,21 @@ void print(char** s)
 char** list_all(char** lines)
 {
     // printf("asa");
-    lines=(char**)malloc(sizeof(char*));
     struct dirent *de;
     DIR *dr =opendir(".");
     int i=1;
     while((de=readdir(dr))!=NULL)
     {
-        lines=(char**)realloc(lines,sizeof(char*)*i);
+        if(i>256)
+            lines=(char**)realloc(lines,sizeof(char*)*i);
         // printf("%ld\n",sizeof(de->d_name)*sizeof(char));
         lines[i-1]=(char*)malloc(sizeof(256));
         lines[i-1]=strcpy(lines[i-1],de->d_name);
         i++;
         
     }
+    if(i>256)
+        lines=(char**)realloc(lines,sizeof(char*)*i);
     lines[i]=NULL;
     closedir(dr);
     return lines;
@@ -106,7 +108,7 @@ int main(int argc, char const *argv[])
     int si=0;
     int i=0;
     // printf("%s\n",argv[0]);
-    char** files;
+    char** files=(char**)malloc(256*sizeof(char*));
     for(i=0;argv[i]!=NULL;i++);
     si=i;
     files=list_all(files);

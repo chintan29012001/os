@@ -33,11 +33,15 @@ void cat(int flg[],char buf[])
     
 
 }
-int funcFile(const char* x,int flg[])
+int funcFile(const char** args,int flg[],int* files,int si)
 {
+
+    for(int i=0;i<si;i++)
+    {
+        const char* x=args[files[i]];
         int fd=open(x,O_RDONLY);
         if(fd==-1)
-            return -1;
+            return funcDir(args[files[i]],flg);
         char* buf=(char*)malloc(1024);
         int i=0; 
         while(read(fd,&buf[i],1))
@@ -52,14 +56,13 @@ int funcFile(const char* x,int flg[])
                 buf=(char*)malloc(1024);
             }
             else
-                i++;
-            
-                
+                i++;                
         }
         buf[i]='\0';
         cat(flg,buf);
         free(buf);        
         close(fd);
+    }
         return 0;
 
 }
@@ -80,64 +83,58 @@ int main(int argc, char const *argv[])
     /* code */
     int si=0;
     int i=0;
-    char** files;
+    // char** files;
     for(i=0;argv[i]!=NULL;i++);
     si=i;
     int flg[3];// 0 -n 1 -E 2 dir/file 3 wrong option 
-    for(int i=0;i<3;i++)flg[i]=0;
-    if(si < 5)
-    {   
-        int i=0;
-        int dir=-1;
-        for(i=1;argv[i]!=NULL;i++)
+    int *files=(int*)malloc(10*sizeof(int));
+    int k=0;
+    for(int i=0;i<3;i++)flg[i]=0; 
+    for(i=1;argv[i]!=NULL;i++)
+    {
+        
+        if(strcmp(argv[i],"-n")==0)
         {
-            
-            if(strcmp(argv[i],"-n")==0)
-            {
-                flg[0]=1;
-            }
-            else if(strcmp(argv[i],"-E")==0)
-            {
-                flg[1]=1;                            
-            }
-            else
-            {
-                flg[2]=1;
-                dir=i;
-            }
-            
-
+            flg[0]=1;
         }
-        if(flg[2]==1)
+        else if(strcmp(argv[i],"-E")==0)
         {
-            in=1;
-            if(funcFile(argv[dir],flg)==-1&&funcDir(argv[dir],flg)==-1)
-                printf("invalid \n");
-
+            flg[1]=1;                            
         }
         else
         {
-            char buf[1024];
-            in=1;
-            while(strcmp(buf,"exit")!=0)
-            {
-                scanf("%s[^\n]%*c",buf);
-                if(buf[0]=='e')
-                {
-                    if(strcmp(buf,"exit")==0)
-                        break;
-                }
-                cat(flg,buf);
-
-            }
-
+            flg[2]=1;
+            files[k]=i;
+            k++;
         }
+        
+
+    }
+    if(flg[2]==1)
+    {
+        in=1;
+        
+        if(funcFile(argv,flg,files,k)==-1)
+            printf("invalid \n");
+        
 
     }
     else
     {
-        printf("Invalid ");
-    }
+        char buf[1024];
+        in=1;
+        while(strcmp(buf,"exit")!=0)
+        {
+            scanf("%s[^\n]%*c",buf);
+            if(buf[0]=='e')
+            {
+                if(strcmp(buf,"exit")==0)
+                    break;
+            }
+            cat(flg,buf);
 
+        }
+
+    } 
     return 0;
 }
