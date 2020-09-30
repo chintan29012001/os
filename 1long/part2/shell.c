@@ -6,7 +6,7 @@
 #include<stdlib.h>
 #include"cd.h"
 #include "echo.h"
- 
+#include "history.h" 
 void split(char* s,char*args[])
 {
     // printf("abs");
@@ -68,7 +68,7 @@ void split(char* s,char*args[])
 }
 
 
-void drivers(char* args[])
+void drivers(char* args[],char** his)
 {
     // printf("%s\n",args[0]);
     if(args[0]!=NULL)
@@ -82,9 +82,23 @@ void drivers(char* args[])
             case 'c':
                 if(strcmp(args[0],"cd")==0)
                 {
+                    // for(int i=0;args[i]!=NULL;i++)
+                    // {
+                    //     printf("%s\n",args[i]);
+                    // }
                     cd1(args);
                 }
-                break;   
+                break;
+            case 'h':
+                 if(strcmp(args[0],"history")==0)
+                {
+                    // for(int i=0;args[i]!=NULL;i++)
+                    // {
+                    //     printf("%s\n",args[i]);
+                    // }
+                    history(args,his);
+                }
+                break;  
             case 'e':
                 if(strcmp(args[0],"exit")==0)
                 {
@@ -140,19 +154,34 @@ void drivers(char* args[])
 int main(int argc, char const *argv[])
 {
     /* code */
+    char** history=(char**)malloc(512*sizeof(char*));
+    int i=0;
+    char* s=(char*)malloc(512*sizeof(char));
     while(1)
     {
-        char s[1024];
+        
         printf("boomerOp>>");
         scanf("%[^\n]%*c",s);
+        
         char** args=(char**)malloc(128*sizeof(char*));
         split(s,args);
-        // for(int i=0;args[i]!=NULL;i++)
-        // {
-        //     printf("in main %s \n",args[i]);
+        if(i>512)
+            history=(char**)realloc(history,i*sizeof(char*));
+        else
+        {
+            if(s!=NULL)
+            {
+                history[i]=s;
+                s=(char*)malloc(512*sizeof(char));
+                i++;
+            }
+        }
+        for(int i=0;history[i]!=NULL;i++)
+        {
+            printf("in main hist %s \n",history[i]);
 
-        // }
-        drivers(args);       
+        }
+        drivers(args,history);       
 
     }
     return 0;

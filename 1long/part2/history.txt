@@ -1,0 +1,4 @@
+echo a
+ls
+history
+history -a

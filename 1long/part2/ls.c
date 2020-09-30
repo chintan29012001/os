@@ -20,7 +20,10 @@ void print(char** s)
     for(int i=0;s[i]!=NULL;i++)
     {
         if(s[i][0]!='.')
+        {
             printf("%s",s[i]);
+            
+        }
     }
 
 }
@@ -37,7 +40,7 @@ char** list_all(char** lines)
         if(i>256)
             lines=(char**)realloc(lines,sizeof(char*)*i);
         // printf("%ld\n",sizeof(de->d_name)*sizeof(char));
-        lines[i-1]=(char*)malloc(sizeof(256));
+        lines[i-1]=(char*)malloc(sizeof(256)*sizeof(char));
         lines[i-1]=strcpy(lines[i-1],de->d_name);
         i++;
         
@@ -53,7 +56,10 @@ void ls(char** s)
     for(int i=0,k=0;s[i]!=NULL;i++)
     {
         if(k%5==0&&k!=0)
+        {
             printf("\n");
+            k++;
+        }
         if(s[i][0]!='.'&&s[i][0]!='\0')
         {
             printf("%s\t",s[i]);
@@ -72,7 +78,7 @@ void _1(char** s)
         if(s[i][0]!='.')
         {
             // printf("%s\n",s[i]);
-            char* temp=malloc((sizeof(s[i]))*sizeof(char));
+            char* temp=(char*)malloc(270);
             temp=strcpy(temp,s[i]);
             temp=strcat(temp,"\n");
             s[i]=temp;
@@ -85,7 +91,7 @@ void _q(char** s)
     {
         if(s[i][0]!='.')
         {
-            char* temp=(char*)malloc(sizeof(s[i])*sizeof(char)+4);
+            char* temp=(char*)malloc(270);
             char* t="\"";
             temp=strcpy(temp,t);
             temp=strcat(temp,s[i]);
