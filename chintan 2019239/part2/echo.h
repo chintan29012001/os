@@ -11,7 +11,7 @@
 
 void echo_help()
 {
-    char * x="echo.help";
+    char * x="/home/chintan/part2/echo.help";
     int fd=open(x,O_RDONLY);
     char* buf=(char*)malloc(1024);
     int i=0; 

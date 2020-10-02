@@ -1,0 +1,11 @@
+NAME         date
+       date - print or set the system date and time
+SYNOPSIS         top
+       date [OPTION]
+DESCRIPTION         top
+       Display the current time in the given FORMAT, or set the system date.
+       -R
+              output date and time in RFC 5322 format.  Example: Mon, 14 Aug
+              2006 02:34:56 -0600
+
+       --help display this help and exit

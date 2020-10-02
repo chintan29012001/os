@@ -55,13 +55,18 @@ void slic(char ar[],char sec)
     {
         avg+=details[i];
     }
-    printf("roll no:%d \t a1:%d \t a2:%d \t a3:%d \t a4:%d \t avg %.2f \n",details[0],details[1],details[2],details[3],details[4],avg/4);
+    printf("%c roll no:%d \t a1:%d \t a2:%d \t a3:%d \t a4:%d \t avg %.2f \n",sec,details[0],details[1],details[2],details[3],details[4],avg/4);
     
 }
 
 void func(char x)
 {
         int fd=open("file.csv",O_RDONLY);
+        if(fd==-1)
+        {
+            printf("File not found");
+            return;
+        }
         // FILE *fp=fopen("file.csv","r");
         char buf[1024];
         char t[]="itStudent,ID,Section-Number,Assignment-1,Assignment-2,Assignment-3,Assignment-4";
@@ -118,6 +123,11 @@ int main(int argc, char const *argv[])
         printf("Child \n");
         func('A');
         exit(0);
+    }
+    else if(x<0)
+    {
+        printf("cannot make a child \n");
+        return 1;
     }
     else
     {

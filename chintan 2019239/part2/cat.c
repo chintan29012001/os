@@ -33,6 +33,16 @@ void cat(int flg[],char buf[])
     
 
 }
+int funcDir(const char* x,int flg[])
+{
+        struct dirent *de;
+        DIR *dr=opendir(x);
+        if(dr==NULL)
+            return -1;
+        printf("cat: %s: Is a directory",de->d_name);
+        return 0;
+
+}
 int funcFile(const char** args,int flg[],int* files,int si)
 {
 
@@ -66,16 +76,7 @@ int funcFile(const char** args,int flg[],int* files,int si)
         return 0;
 
 }
-int funcDir(const char* x,int flg[])
-{
-        struct dirent *de;
-        DIR *dr=opendir(x);
-        if(dr==NULL)
-            return -1;
-        printf("cat: %s: Is a directory",de->d_name);
-        return 0;
 
-}
 
 
 int main(int argc, char const *argv[])

@@ -1,0 +1,7 @@
+history: history 
+    Display or manipulate the history list
+    
+    Options:
+    
+      -a	append history lines from this session to the history file
+      --help : read help

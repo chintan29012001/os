@@ -1,0 +1,46 @@
+echo a
+ls
+history
+history -a
+cat
+ls
+cat date.c
+cat -n cat.c
+cat -E
+cat -E cat.c
+date
+date -r
+date --help
+rm
+rm as
+ls
+rm -i a
+rm -f as
+rm as
+rm -i as
+mkdir asa
+mkdir
+ls
+mkdir -v aaa
+mkdir --help
+history
+ls
+history -a
+history
+ls
+history -r
+history -a
+ls
+cd
+ls
+cd Desktop
+ls
+rm a
+ls
+history -a
+cat -n rm.c
+date -R
+date
+date --help
+history
+history -a

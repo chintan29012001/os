@@ -1,4 +1,3 @@
-//mkdir -p
 #include <sys/stat.h> 
 #include <sys/types.h> 
 #include <unistd.h>
@@ -11,7 +10,7 @@
 
 void help()
 {
-    char * x="mkdir.help";
+    char * x="/home/chintan/part2/mkdir.help";
     int fd=open(x,O_RDONLY);
     char* buf=(char*)malloc(1024);
     int i=0; 
@@ -60,7 +59,7 @@ int main(int argc, char const *argv[])
     /* code */
     
     int k=1;
-    int* files=(int*)malloc(sizeof(int)*k);
+    int* files=(int*)malloc(sizeof(int)*5);
     int flg[3]; //0 --help 1-v 2 -file 
     for(int i=0;i<3;i++)flg[i]=0;
     for(int i=1;argv[i]!=NULL;i++)
@@ -76,7 +75,7 @@ int main(int argc, char const *argv[])
         }
         else
         {
-            if(k>1)
+            if(k>5)
                 files=(int*)realloc(files,sizeof(int)*k);
             files[k-1]=i;
             k++;

@@ -9,10 +9,8 @@
 
 void cd_help()
 {
-    char* a=(char*)malloc(512);
-    a=getenv("PWD");
+    char* a="/home/chintan/part2/cd.help";
     // printf("%s\n",a);
-    strcat(a,"/cd.help");
     // printf("%s\n",a);
     // char * x="cd.help";
     int fd=open(a,O_RDONLY);
@@ -75,6 +73,10 @@ void cd1(char** argv)
             
         }
         else if(strcmp(argv[i],"-P")==0)
+        {
+            flg[1]=1;
+        }
+        else if(strcmp(argv[i],"-L")==0)
         {
             flg[1]=1;
         }

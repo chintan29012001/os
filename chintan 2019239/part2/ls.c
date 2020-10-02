@@ -35,6 +35,11 @@ char** list_all(char** lines)
     struct dirent *de;
     DIR *dr =opendir(".");
     int i=1;
+    if(dr==NULL)
+    {
+        printf("not valid dir");
+        return NULL;
+    }
     while((de=readdir(dr))!=NULL)
     {
         if(i>256)
@@ -119,6 +124,10 @@ int main(int argc, char const *argv[])
     si=i;
     files=list_all(files);
     // printf("%d\n",si);
+    if(files==NULL)
+    {
+        return 1;
+    }
     if(si==1)
     {
         ls(files);
