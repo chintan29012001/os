@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     msgid=msgget(key,0666|IPC_CREAT);
     toke.type=1;
     char buf[512];
-    printf("sending data from a \n");
+    // printf("sending data from a \n");
     while(fgets(buf,512,fp))
     {
         char* temp=strtok(buf," ");
