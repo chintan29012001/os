@@ -51,11 +51,11 @@ void *reader(void *arg)
   long* data=shmat(data_key, NULL, 0);
   printf("Data read by the reader%d is %ld\n",f,*data);
   shmdt(data);
-  sleep(1);
+  // sleep(1);
   sem_wait(&mutex);
   rcount = shmat(rc_key, NULL, 0);
   *rcount = *rcount - 1;
-  if(rcount==0)
+  if(*rcount==0)
    sem_post(&writeblock);
   shmdt(rcount);
   sem_post(&mutex);
@@ -72,7 +72,7 @@ void *writer(void *arg)
   printf("Data writen by the writer%d is %ld\n",f,*data);
   shmdt(data);
   sem_post(&writeblock);
-  sleep(1);
+  // sleep(1);
   
 }
 

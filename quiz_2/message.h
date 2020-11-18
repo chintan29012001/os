@@ -1,5 +1,5 @@
 #include <sys/types.h>
 struct message{ 
     long type; 
-    char message[100]; 
+    char message[80]; 
 };
