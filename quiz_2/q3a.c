@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
         }
         // printf("data sent");
     }
-    // sendto(fd, "\n\n", strlen("\n\n")+1, 0, (struct sockaddr*) &destination, sizeof(destination));
+    sendto(fd, "\n\n", strlen("\n\n")+1, 0, (struct sockaddr*) &destination, sizeof(destination));
 
     
     return 0;

@@ -5,7 +5,7 @@
 #include <sys/un.h>
 #include <string.h>
 #define MAX_MESSAGE_SIZE 100
-#define LOCAL       "./sockA"
+#define LOCAL       "./sockB"
 #define DESTINATION "./sockC"
 int main(int argc, char const *argv[])
 {

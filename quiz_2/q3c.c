@@ -36,13 +36,18 @@ int main(int argc, char const *argv[])
 	// Emitter
     struct sockaddr_un emitter;
 	socklen_t len;
-
+	int c=0;
 	size_t size;
 	do{
 		memset(message, 0, MAX_MESSAGE_SIZE);
 		size = recvfrom(fd, message, MAX_MESSAGE_SIZE, 0, (struct sockaddr *) &emitter, &len);
 		if(size == -1) { perror("Receiver"); exit(EXIT_FAILURE); }
-		printf("%s ",message);
-	}while(strcmp(message, "\n\n") != 0);
+        if(strcmp(message, "\n\n") != 0)
+		    printf("%s ",message);
+		else
+		{
+			c++;
+		}
+	}while(c != 2);
     return 0;
 }

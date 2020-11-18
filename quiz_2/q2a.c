@@ -34,6 +34,8 @@ int main(int argc, char const *argv[])
         }
         // printf("data sent");
     }
+    strcpy(toke.message,"\n\n");
+    msgsnd(msgid,&toke,sizeof(toke),0);
     
 
     return 0;

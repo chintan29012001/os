@@ -26,13 +26,19 @@ int main()
 	// }
 
 	// msgrcv to receive message 
+	int c=0;
 	while(msgrcv(msgid, &msg, sizeof(msg), 1, 0))
     {
 		if(strcmp(msg.message,"\n\n")==0)
-			break;
+		{
+			c++;
+			if(c==2)
+				break;
+			continue;
+		}
+			
 		
 		printf("%s ",msg.message); 
-		
 		
 			// to destroy the message queue 
     }
