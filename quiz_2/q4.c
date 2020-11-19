@@ -8,91 +8,162 @@
 #include <semaphore.h> 
 #include<sys/wait.h> 
 
-sem_t mutex;
-sem_t mutex1;
-sem_t mutex2;
+sem_t text_block;
+sem_t num_block;
+sem_t parent_lock1;
+sem_t parent_lock2;
+sem_t child_lock1;
+sem_t child_lock2;
+int getSharedMemory(int id,int seg)
+{
+	key_t shared_key = ftok(".", id);
+	int shared_id;
+	if((shared_id = shmget(shared_key, seg, IPC_CREAT | 0666)) == -1){
+		perror("Cannot retrive shared memory");
+		exit(EXIT_FAILURE);
+	}
+
+	return shared_id;
+}
 
 int main(int argc, char const *argv[])
 {
-    // key_t shared_key = ftok(".", 0);
-    key_t shared_key1 = ftok(".", 1);
-    key_t shared_key2 = ftok(".", 2);
-    // int shared_id;
-    int shared_id1;
-    int shared_id2;
+    
+    int shared_id_text;
+    int shared_id_num;
+    int shared_id_address;
+    shared_id_text = getSharedMemory(1,20);
+    shared_id_num = getSharedMemory(2,8);
+    shared_id_address=getSharedMemory(10,4);
     // mutex=sem_open(SEMAPHORE1_NAME, O_CREAT | O_EXCL, 0666, 0);
-    sem_init(&mutex, 1, 1);
-    sem_init(&mutex1, 1, 1); 
-    // shared_id = shmget(shared_key, 512, IPC_CREAT | 0666);
-    shared_id1 = shmget(shared_key1, 512, IPC_CREAT | 0666);
-    shared_id2 = shmget(shared_key1, 1, IPC_CREAT | 0666);
+    
+    sem_init(&text_block, 1, 1); 
+    sem_init(&num_block, 1, 1); 
+    sem_init(&parent_lock1,1,0);
+    sem_init(&parent_lock2,1,0);
+    sem_init(&child_lock1,1,1);
+    sem_init(&child_lock2,1,1);
+    
+    
     
     int c=fork();
     if(c>0)
     {
-
-        //parent ptocess
-        char* shared_memory_text;
-        int* written_to_shared;
-        // int* shared_memory_num;
-        FILE *fp;
-        fp=fopen("para1.txt","r");
-        if(fp==NULL)
-            return 1;
-        char buf[512];
-        // sem_wait(&mutex);
-        // written_to_shared=shmat(shared_id2, NULL, 0);
-        // *written_to_shared=0;
-        // shmdt(written_to_shared);
-        // sem_post(&mutex);
-        sem_wait(&mutex1);
-        shared_memory_text = shmat(shared_id1, NULL, 0);        
-        if(fgets(buf,512,fp))
+        for(int j=0;j<2;j++)
         {
-            printf("%s\n",buf);
-            memcpy(shared_memory_text,buf,strlen(buf)+1); 
-        }
-        shmdt(shared_memory_text);
-        sem_post(&mutex1);
-        sem_wait(&mutex);
-        written_to_shared=shmat(shared_id2, NULL, 0);
-        *written_to_shared=1;
-        printf("%d",*written_to_shared);
-        shmdt(written_to_shared);
-        sem_post(&mutex); 
-                   
+            
+            int i=10;
+            // sem_post(&parent_lock);    
+            sem_trywait(&child_lock1);
+            char x[]="p text here";
+            sem_wait(&text_block);
+            char* str=shmat(shared_id_text, NULL, 0);
+            memcpy(str,x,strlen(x)+1);
+            shmdt(str);
+            sem_post(&text_block);
+            sem_post(&parent_lock1);
+            i++;
+            sem_trywait(&child_lock2);
+            long* num=shmat(shared_id_num, NULL, 0);
+            *num=i;
+            shmdt(num);
+            sem_post(&num_block);
+            sem_post(&parent_lock2);
+            // sem_wait(&address_block);
+            
+            sleep(1);
+            
+            
+            sem_trywait(&child_lock1);
+            sem_wait(&text_block);
+            str=shmat(shared_id_text, NULL, 0);
+            printf("%s \n",str);
+            shmdt(str);
+            sem_post(&text_block);
+            sem_trywait(&child_lock2);
+            sem_wait(&num_block);
+            num=shmat(shared_id_num, NULL, 0);
+            printf("%ld \n",*num);
+            shmdt(num);
+            sem_post(&num_block); 
+            sleep(1);
+            
+        }    
+        
         wait(NULL);
+        if(shmctl(shared_id_address, IPC_RMID, NULL) == -1){
+		perror("Cannot remove shared memory");
+		exit(EXIT_FAILURE);
+	    }
+        if(shmctl(shared_id_num, IPC_RMID, NULL) == -1)
+        {
+            perror("Cannot remove shared memory");
+            exit(EXIT_FAILURE);
+        }
+        
+        if(shmctl(shared_id_text, IPC_RMID, NULL) == -1){
+                perror("Cannot remove shared memory");
+                exit(EXIT_FAILURE);
+            }
+        // sem_destroy(&address_block);
+        sem_destroy(&text_block);
+        sem_destroy(&num_block);     
+         
+        //parent ptocess
+       
         
 
 
     }
     else
     {
-        //child process
-        char* shared_memory_text;
-        int* written_to_shared;
-        char buf[512];
-        while (1)
+        //reading
+        int i=20;
+        // sem_post(&parent_lock);
+        for(int j=0;j<2;j++)
         {
-            sem_wait(&mutex);
-            written_to_shared=shmat(shared_id2, NULL, 0);
-            if(*written_to_shared==1)
-            {
-                break;
-            }
-            shmdt(written_to_shared);
-            sem_post(&mutex);
-                
-                
+            // sem_trywait(&child_lock1);
+            // sem_trywait(&child_lock2);
+            char y[]="c text here";
+            sem_trywait(&parent_lock1);
+            sem_wait(&text_block);
+            char* str=shmat(shared_id_text, NULL, 0);
+            printf("%s \n",str);
+            memcpy(str,y,strlen(y)+1);
+            shmdt(str);
+            sem_post(&text_block);
+            sem_trywait(&parent_lock2);
+            sem_wait(&num_block);
+            long* num=shmat(shared_id_num, NULL, 0);
+            printf("%ld \n",*num);
+            *num=i;
+            shmdt(num);
+            sem_post(&num_block);
+            
+            sleep(1);
+            
+            sem_trywait(&parent_lock1);
+            sem_wait(&text_block);
+            str=shmat(shared_id_text, NULL, 0);
+            printf("%s \n",str);
+            shmdt(str);
+            sem_post(&text_block);
+            sem_post(&child_lock1);
+            sem_trywait(&parent_lock2);
+            sem_wait(&num_block);
+            num=shmat(shared_id_num, NULL, 0);
+            printf("%ld \n",*num);
+            shmdt(num);
+            sem_post(&num_block);
+            sem_post(&child_lock2);
+            sleep(1);
             
         }
         
-        sem_wait(&mutex1);
-        shared_memory_text = shmat(shared_id1, NULL, 0);        
-        printf("%s\n",shared_memory_text);
-        shmdt(shared_memory_text);
-        sem_post(&mutex1);
-                    
+        // sleep(1);       
+        
+        
+
         
         
     }

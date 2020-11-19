@@ -15,10 +15,10 @@ void* phil(void* f)
     sleep(1);//thinking
     int i=(int)f;
     sem_wait(&mutex[i]);
-    printf("philosopher %d received %d fork \n",i,i);
+    printf("philosopher %d received f%d\n",i,i);
     sem_wait(&mutex[(i+1)%5]);
-    printf("philosopher %d received %d fork \n",i,(i+1)%5);
-    printf("philosopher %d received two forks f%d f%d \n",i,i,(i+1)%5);
+    printf("philosopher %d received f%d  \n",i,(i+1)%5);
+    printf("philosopher %d received two f%d f%d \n",i,i,(i+1)%5);
     sleep(1);//eating
     sem_post(&mutex[i]);
     sem_post(&mutex[(i+1)%5]);
@@ -29,11 +29,11 @@ void* phil1(void* f)
     sleep(1);//thinking
     int i=(int)f;
     sem_wait(&mutex[(i+1)%5]);
-    printf("philosopher %d received %d fork \n",i,(i+1)%5);
+    printf("philosopher %d received f%d  \n",i,(i+1)%5);
     sem_wait(&mutex[i]);
-    printf("philosopher %d received %d fork \n",i,i);
+    printf("philosopher %d received f%d  \n",i,i);
     
-    printf("philosopher %d received two forks f%d f%d \n",i,i,(i+1)%5);
+    printf("philosopher %d received two f%d f%d \n",i,i,(i+1)%5);
     sleep(1);//eating
     sem_post(&mutex[i]);
     sem_post(&mutex[(i+1)%5]);
@@ -57,6 +57,10 @@ int main(int argc, char const *argv[])
     {
         pthread_join(philosophers[i],NULL);   
         
+    }
+    for(int i=0;i<5;i++)
+    {
+        sem_destroy(&mutex[i]);
     }
 
     return 0;

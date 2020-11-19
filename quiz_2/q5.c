@@ -116,6 +116,18 @@ int main()
     pthread_join(rtid[i],NULL);   
     
   }
+  sem_destroy(&mutex);
+  sem_destroy(&writeblock);
+  int rc_key=getSharedMemory(1,4);
+  // int data_key=getSharedMemory(2,8);
+  if(shmctl(rc_key, IPC_RMID, NULL) == -1){
+		perror("Cannot remove shared memory");
+		exit(EXIT_FAILURE);
+	}
+  if(shmctl(data_key, IPC_RMID, NULL) == -1){
+		perror("Cannot remove shared memory");
+		exit(EXIT_FAILURE);
+	}
   
   return 0;
 }
