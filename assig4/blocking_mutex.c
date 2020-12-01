@@ -26,7 +26,7 @@ void initialize(int n)
 {
    //printf("ini started \n");
    ar.total_philosophers=n;
-   ar.entry_allowed=n;
+   ar.entry_allowed=n-1;
    ar.vr_sem=(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
    ar.forks=(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)*n);
    ar.thread_sleep_locks=(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)*n);
@@ -47,7 +47,7 @@ void wait(int index)
 {
    //printf("in wait %d \n",index);
    pthread_mutex_lock(ar.vr_sem);
-   ar.entry_allowed-=2;
+   ar.entry_allowed-=1;
    // pthread_mutex_unlock(ar.vr_sem);
    if(ar.entry_allowed<0)
    {
@@ -88,7 +88,7 @@ void signal(int index)
 {
    //printf("in signal %d \n",index);
    pthread_mutex_lock(ar.vr_sem);
-   ar.entry_allowed+=2;
+   ar.entry_allowed+=1;
    pthread_mutex_unlock(ar.vr_sem);
    pthread_mutex_unlock(&ar.thread_sleep_locks[index]);
    pthread_mutex_unlock(&ar.thread_sleep_locks[(index+1)%ar.total_philosophers]);
@@ -171,6 +171,7 @@ int main()
       pthread_mutex_destroy(ar.vr_sem);
       pthread_mutex_destroy(&ar.sauce[0]);
       pthread_mutex_destroy(&ar.sauce[1]);
+      free(ar1);
       
       sleep(1);
    exit(0);
