@@ -1,3 +1,4 @@
+
 #include <pthread.h> 
 #include <stdio.h> 
 #include <unistd.h> 
@@ -47,17 +48,18 @@ int wait(int index)
    //printf("in wait %d \n",index);
    int x=0;
    x+=pthread_mutex_trylock(ar.vr_sem);
-   ar.entry_allowed-=1;
+   if(x==0)
+      ar.entry_allowed-=1;
    // pthread_mutex_unlock(ar.vr_sem);
    if(ar.entry_allowed<0)
    {
-      x+=pthread_mutex_unlock(ar.vr_sem);
+      pthread_mutex_unlock(ar.vr_sem);
       
       //printf("entry was not allowed \n");
       return 1;
    }
    else
-      x+=pthread_mutex_unlock(ar.vr_sem);
+      pthread_mutex_unlock(ar.vr_sem);
    if(index%2==0)
    {
       x+=pthread_mutex_trylock(&ar.thread_sleep_locks[index]);
@@ -76,19 +78,27 @@ int wait(int index)
    }
    return x;
    
-   //printf("out of wait %d \n",index);
+   printf("out of wait %d \n",index);
+}
+void signal_printval()
+{
+   pthread_mutex_trylock(ar.vr_sem);
+   printf("%d\n",ar.entry_allowed);
+   pthread_mutex_unlock(ar.vr_sem);
+
 }
 int signal(int index)
 {
    //printf("in signal %d \n",index);
    int x=0;
    x+=pthread_mutex_trylock(ar.vr_sem);
-   ar.entry_allowed+=1;
-   x+=pthread_mutex_unlock(ar.vr_sem);
-   x+=pthread_mutex_unlock(&ar.thread_sleep_locks[index]);
-   x+=pthread_mutex_unlock(&ar.thread_sleep_locks[(index+1)%ar.total_philosophers]);
-   x+=pthread_mutex_unlock(&ar.sauce[0]);
-   x+=pthread_mutex_unlock(&ar.sauce[1]); 
+   if(x==0)
+      ar.entry_allowed+=1;
+   pthread_mutex_unlock(ar.vr_sem);
+   pthread_mutex_unlock(&ar.thread_sleep_locks[index]);
+   pthread_mutex_unlock(&ar.thread_sleep_locks[(index+1)%ar.total_philosophers]);
+   pthread_mutex_unlock(&ar.sauce[0]);
+   pthread_mutex_unlock(&ar.sauce[1]); 
    //printf("out of signal %d \n",index);
    return x;
    
@@ -100,13 +110,10 @@ void *philosopher(int i)
     //   sleep(1);//thinking
     while(1)
     {
-       sleep(1);//thinking
+       
       if(wait(i)!=0)
         {
             // signal(i);
-            pthread_mutex_trylock(ar.vr_sem);
-            ar.entry_allowed+=1;
-            pthread_mutex_unlock(ar.vr_sem);
             pthread_mutex_unlock(&ar.thread_sleep_locks[i]);
             pthread_mutex_unlock(&ar.thread_sleep_locks[(i+1)%ar.total_philosophers]);
             pthread_mutex_unlock(&ar.sauce[0]);
@@ -116,8 +123,16 @@ void *philosopher(int i)
         }
       // x+=pthread_mutex_trylock(ar.vr_sem);
       printf("Philosopher %ld eats using forks %d and %d \n",pthread_self(),i,(i+1)%ar.total_philosophers);
+      signal_printval();
       sleep(1);
-      signal(i);
+      if(signal(i)!=0)
+      {
+         pthread_mutex_lock(ar.vr_sem);
+            ar.entry_allowed+=1;
+         pthread_mutex_unlock(ar.vr_sem);
+
+      }
+      sleep(1);//thinking
       
     } 
    
@@ -156,3 +171,4 @@ int main()
 
    exit(0);
 }
+

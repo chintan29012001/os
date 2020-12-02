@@ -126,11 +126,44 @@ void signal(int index)
    
 
 }
-void signal_printval()
+void signal_printval(int index)
 {
    pthread_mutex_lock(ar.vr_sem);
    printf("%d\n",ar.entry_allowed);
+   ar.entry_allowed+=1;
    pthread_mutex_unlock(ar.vr_sem);
+   pthread_mutex_unlock(&ar.forks[index]);
+   pthread_mutex_unlock(&ar.forks[(index+1)%ar.total_philosophers]);
+   pthread_mutex_unlock(&ar.sauce[0]);
+   pthread_mutex_unlock(&ar.sauce[1]); 
+   pthread_mutex_lock(ar.vr_sem);
+   if(ar.entry_allowed<=0)
+   {
+      
+      pthread_mutex_unlock(ar.vr_sem);
+      //printf("released sem  \n");
+      // pthread_mutex_lock(ar.qu_sem);
+      // struct node* n=ar.q->front;
+      // pthread_mutex_unlock(ar.qu_sem);
+      //printf("n %ld \n",&n);
+
+      pthread_cond_signal(ar.thread_sleep_locks_cond);
+         // //printf("waking up %d \n",n->index);
+         //printf("waking up %d \n",n->index);
+         // pthread_mutex_lock(&ar.thread_sleep_locks[n->index]);
+         //printf("acquired the lock %d \n",n->index);
+         // pthread_mutex_unlock(ar.sem);
+         
+         // pthread_mutex_unlock(&ar.thread_sleep_locks[n->index]);
+         // sleep(1);
+         
+      
+      
+      // free(n);
+   }
+   else
+      pthread_mutex_unlock(ar.vr_sem);
+   //printf("out of signal %d \n",index);
 
 }
 void *philosopher(int i)
@@ -144,11 +177,11 @@ void *philosopher(int i)
       wait(i);
       // pthread_mutex_lock(ar.vr_sem);
       printf("Philosopher %ld eats using forks %d and %d  \n",pthread_self(),i,(i+1)%ar.total_philosophers);
-      // signal_printval();
+    //   signal_printval(i);
       // pthread_mutex_unlock(ar.vr_sem);
       sleep(1);
       signal(i);
-      sleep(1);
+      sleep(1);//thinking
       // printf("exit\n");
     } 
    
@@ -168,7 +201,7 @@ int main()
       for(int i=0;i<n;i++)
       {
          pthread_create(&ar1[i],NULL,philosopher,i);
-         sleep(1);
+        //  sleep(1);
       }
       for(int i=0;i<n;i++)
       {
