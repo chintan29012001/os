@@ -159,20 +159,13 @@ void *philosopher(int i)
    
       while(1)
     {
-      //  sleep(2);//thinking
-      // sleep(1);
-      // printf("start\n");
       
       wait(i);
-      // pthread_mutex_lock(ar.vr_sem);
       printf("Philosopher %ld eats using forks %d and %d  \n",pthread_self(),i,(i+1)%total_philosophers);
       // signal_printval(i);
-      // signal_printval();
-      // pthread_mutex_unlock(ar.vr_sem);
       sleep(1);
       signal(i);
       sleep(1);
-      // printf("exit\n");
     } 
    
 
